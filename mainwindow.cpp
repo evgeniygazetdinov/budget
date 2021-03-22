@@ -4,7 +4,7 @@
 #include <QtGui>
 #include <QMessageBox>
 #include <iostream>
-#include <QVector>
+#include <QMap>
 #include <QString>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -12,9 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-
-
+    private:
+        QMap <QString, QString> myMap;
 }
 
 MainWindow::~MainWindow()
@@ -24,9 +23,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    QString str;
-    str = QString(ui->lineEdit->displayText());
-    qDebug("%s",qPrintable(str));
+    QString target, price;
+    target = QString(ui->lineEdit->text());
+    price = QString(ui->lineEdit_2->text());
+    qDebug("%s",qPrintable(target));
+    qDebug("%s",qPrintable(price));
 }
 
 void MainWindow::on_lineEdit_editingFinished()
