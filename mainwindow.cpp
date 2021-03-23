@@ -31,6 +31,46 @@ void MainWindow::get_my_wares()
     }
 }
 
+//TODO move session methods in indendent class
+void MainWindow::read_session()
+{
+    QByteArray data;
+    QFile file("in.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    QTextStream in(&file);
+    // You could use readAll() here, too.
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        data.append(line);
+    }
+
+    file.close();
+    return data;
+}
+
+void MainWindow::write_session()
+{
+    QFile file("out.txt");
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        return;
+
+    QTextStream out(&file);
+    out.write(data);
+    file.close();
+}
+
+
+void MainWindow::store_to_session()
+{
+
+}
+void MainWindow::get_from_session()
+{
+
+}
+
 
 void MainWindow::on_pushButton_clicked()
 {

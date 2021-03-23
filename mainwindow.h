@@ -17,6 +17,8 @@ public:
     QMap <QString, QString> myWaresMap;
     void set_my_wares(QString &target, QString &price);
     void get_my_wares();
+    void store_to_session();
+    void get_from_session();
 
 private slots:
     void on_pushButton_clicked();
