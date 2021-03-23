@@ -12,23 +12,36 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    private:
-        QMap <QString, QString> myMap;
-}
+
+ }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+void MainWindow::set_my_wares(QString &target, QString &price)
+{
+    MainWindow::myWaresMap.insert(target, price);
+}
+void MainWindow::get_my_wares()
+{
+    for(auto e : MainWindow::myWaresMap.toStdMap())
+    {
+      qDebug() << e.first << "," << e.second << '\n';
+    }
+}
+
 
 void MainWindow::on_pushButton_clicked()
 {
     QString target, price;
     target = QString(ui->lineEdit->text());
     price = QString(ui->lineEdit_2->text());
-    qDebug("%s",qPrintable(target));
-    qDebug("%s",qPrintable(price));
+    set_my_wares(target, price);
+    get_my_wares();
 }
+
+
 
 void MainWindow::on_lineEdit_editingFinished()
 {
