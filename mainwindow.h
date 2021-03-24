@@ -17,6 +17,8 @@ public:
     QMap <QString, QString> myWaresMap;
     void set_my_wares(QString &target, QString &price);
     void get_my_wares();
+    QString read_session();
+    void write_to_session();
     void store_to_session();
     void get_from_session();
 

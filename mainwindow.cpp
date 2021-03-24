@@ -32,12 +32,12 @@ void MainWindow::get_my_wares()
 }
 
 //TODO move session methods in indendent class
-void MainWindow::read_session()
+QString MainWindow::read_session()
 {
     QByteArray data;
     QFile file("in.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
+        return "";
 
     QTextStream in(&file);
     // You could use readAll() here, too.
@@ -50,14 +50,14 @@ void MainWindow::read_session()
     return data;
 }
 
-void MainWindow::write_session()
+void MainWindow::write_to_session()
 {
     QFile file("out.txt");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         return;
 
     QTextStream out(&file);
-    out.write(data);
+    out << "some" << "\n";
     file.close();
 }
 
@@ -78,6 +78,7 @@ void MainWindow::on_pushButton_clicked()
     target = QString(ui->lineEdit->text());
     price = QString(ui->lineEdit_2->text());
     set_my_wares(target, price);
+    store_to_session();
     get_my_wares();
 }
 
