@@ -52,18 +52,21 @@ QString MainWindow::read_session()
 
 void MainWindow::write_to_session()
 {
-    QFile file("out.txt");
+    QFile file("/home/evgesha/budget/out.txt");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         return;
 
     QTextStream out(&file);
     out << "some" << "\n";
     file.close();
+    qDebug()<<"writen`";
 }
 
 
 void MainWindow::store_to_session()
 {
+    write_to_session();
+    qDebug()<<"here`";
 
 }
 void MainWindow::get_from_session()
