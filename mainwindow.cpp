@@ -7,6 +7,12 @@
 #include <QMap>
 #include <QString>
 
+
+
+
+const QString SESSION_PATH = "/home/evgesha/budget/out.txt";
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -35,7 +41,7 @@ void MainWindow::get_my_wares()
 QString MainWindow::read_session()
 {
     QByteArray data;
-    QFile file("in.txt");
+    QFile file(SESSION_PATH);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return "";
 
@@ -47,19 +53,26 @@ QString MainWindow::read_session()
     }
 
     file.close();
+    qDebug()<<data;
     return data;
 }
 
 void MainWindow::write_to_session()
 {
-    QFile file("/home/evgesha/budget/out.txt");
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    QFile file(SESSION_PATH);
+    if (!file.open(QIODevice::ReadWrite | QIODevice::Append))
         return;
 
     QTextStream out(&file);
-    out << "some" << "\n";
+    for(auto e : MainWindow::myWaresMap.keys())
+    {
+      out <<e<<" "<< MainWindow::myWaresMap.value(e)<<"\n";
+    }
+
     file.close();
     qDebug()<<"writen`";
+    QMap<QString, int> myMap;
+
 }
 
 
@@ -82,7 +95,7 @@ void MainWindow::on_pushButton_clicked()
     price = QString(ui->lineEdit_2->text());
     set_my_wares(target, price);
     store_to_session();
-    get_my_wares();
+    read_session();
 }
 
 
