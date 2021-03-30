@@ -21,6 +21,7 @@ public:
     void write_to_session();
     void store_to_session();
     void get_from_session();
+    void fooling_table();
 
 private slots:
     void on_pushButton_clicked();

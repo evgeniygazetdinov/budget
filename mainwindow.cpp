@@ -18,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    MainWindow::fooling_table();
+    qDebug()<<"HERE";
 
  }
 
@@ -50,6 +52,7 @@ QString MainWindow::read_session()
     while (!in.atEnd()) {
         QString line = in.readLine();
         data.append(line);
+        //to do convert to qmap and put into screen
     }
 
     file.close();
@@ -75,6 +78,27 @@ void MainWindow::write_to_session()
 
 }
 
+void MainWindow::fooling_table()
+{
+    ui->tableWidget->setRowCount(10);
+    ui->tableWidget->setColumnCount(3);
+
+    /*add stuff inside the table view*/
+    QString line = "hello";
+    for(int i=0; i<ui->tableWidget->rowCount(); i++)
+    {
+        for(int j=0; j<ui->tableWidget->columnCount(); j++)
+        {
+            QTableWidgetItem *pCell = ui->tableWidget->item(i, j);
+            if(!pCell)
+            {
+                pCell = new QTableWidgetItem;
+                ui->tableWidget->setItem(i, j, pCell);
+            }
+            pCell->setText(line);
+        }
+    }
+}
 
 void MainWindow::store_to_session()
 {
@@ -97,7 +121,6 @@ void MainWindow::on_pushButton_clicked()
     store_to_session();
     read_session();
 }
-
 
 
 void MainWindow::on_lineEdit_editingFinished()
