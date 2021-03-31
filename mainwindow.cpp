@@ -6,6 +6,8 @@
 #include <iostream>
 #include <QMap>
 #include <QString>
+#include <fstream>
+#include <iostream>
 
 
 
@@ -19,8 +21,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     MainWindow::fooling_table();
-    qDebug()<<"HERE";
-
  }
 
 MainWindow::~MainWindow()
@@ -63,12 +63,13 @@ QString MainWindow::read_session()
 void MainWindow::write_to_session()
 {
     QFile file(SESSION_PATH);
-    if (!file.open(QIODevice::ReadWrite | QIODevice::Append))
+    if (!(file.open(QIODevice::WriteOnly | QIODevice::Append)))
         return;
-
+    qDebug()<<"on write";
     QTextStream out(&file);
     for(auto e : MainWindow::myWaresMap.keys())
     {
+      qDebug()<<e<<""<<MainWindow::myWaresMap.value(e);
       out <<e<<" "<< MainWindow::myWaresMap.value(e)<<"\n";
     }
 
@@ -78,11 +79,32 @@ void MainWindow::write_to_session()
 
 }
 
+int MainWindow::find_quantity_good_from_session()
+{
+    int numLines = 0;
+    QFile inputFile(SESSION_PATH);
+    if (inputFile.open(QIODevice::ReadOnly))
+    {
+       QTextStream in(&inputFile);
+       while (!in.atEnd())
+       {
+          QString line = in.readLine();
+          numLines++;
+       }
+       inputFile.close();
+    }
+    return numLines;
+}
+
+
+
+
 void MainWindow::fooling_table()
 {
-    ui->tableWidget->setRowCount(10);
-    ui->tableWidget->setColumnCount(3);
-
+    int row_count = find_quantity_good_from_session();
+    ui->tableWidget->setRowCount(row_count);
+    qDebug()<<row_count;
+    ui->tableWidget->setColumnCount(2);
     /*add stuff inside the table view*/
     QString line = "hello";
     for(int i=0; i<ui->tableWidget->rowCount(); i++)
@@ -95,22 +117,24 @@ void MainWindow::fooling_table()
                 pCell = new QTableWidgetItem;
                 ui->tableWidget->setItem(i, j, pCell);
             }
+
             pCell->setText(line);
         }
+    }
+}
+
+void MainWindow::clean_table(){
+    qDebug()<<"cleaning"<<ui->tableWidget->rowCount()<<"\n";
+    while(ui->tableWidget->rowCount() > 0){
+        ui->tableWidget->removeRow(0);
     }
 }
 
 void MainWindow::store_to_session()
 {
     write_to_session();
-    qDebug()<<"here`";
 
 }
-void MainWindow::get_from_session()
-{
-
-}
-
 
 void MainWindow::on_pushButton_clicked()
 {
@@ -119,7 +143,8 @@ void MainWindow::on_pushButton_clicked()
     price = QString(ui->lineEdit_2->text());
     set_my_wares(target, price);
     store_to_session();
-    read_session();
+    clean_table();
+    fooling_table();
 }
 
 

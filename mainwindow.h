@@ -23,9 +23,12 @@ public:
     void get_from_session();
     void fooling_table();
 
+    int find_quantity_good_from_session();
+
+
 private slots:
     void on_pushButton_clicked();
-
+    void clean_table();
     void on_lineEdit_editingFinished();
 
 private:
