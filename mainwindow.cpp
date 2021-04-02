@@ -8,7 +8,7 @@
 #include <QString>
 #include <fstream>
 #include <iostream>
-
+#include <sstream>
 
 
 
@@ -69,13 +69,11 @@ void MainWindow::write_to_session()
     QTextStream out(&file);
     for(auto e : MainWindow::myWaresMap.keys())
     {
-      qDebug()<<e<<""<<MainWindow::myWaresMap.value(e);
       out <<e<<" "<< MainWindow::myWaresMap.value(e)<<"\n";
     }
 
     file.close();
     qDebug()<<"writen`";
-    QMap<QString, int> myMap;
 
 }
 
@@ -107,20 +105,35 @@ void MainWindow::fooling_table()
     ui->tableWidget->setColumnCount(2);
     /*add stuff inside the table view*/
     QString line = "hello";
-    for(int i=0; i<ui->tableWidget->rowCount(); i++)
+
+    for( int row = 0; row < 5; row++ )
     {
-        for(int j=0; j<ui->tableWidget->columnCount(); j++)
+        for( int column = 0; column < 6; column++ )
+
         {
-            QTableWidgetItem *pCell = ui->tableWidget->item(i, j);
-            if(!pCell)
+
+            QFile inputFile(SESSION_PATH);
+            if (inputFile.open(QIODevice::ReadOnly))
             {
-                pCell = new QTableWidgetItem;
-                ui->tableWidget->setItem(i, j, pCell);
+               QTextStream in(&inputFile);
+               while (!in.atEnd())
+               {
+                  QString line = in.readLine();
+                  QVariant oVariant = line;
+                  QTableWidgetItem * poItem = new QTableWidgetItem();
+                  poItem->setData( Qt::DisplayRole, oVariant );
+                  ui->tableWidget->setItem( row, column, poItem );
+
+               }
+               inputFile.close();
             }
 
-            pCell->setText(line);
+
+
+
         }
     }
+
 }
 
 void MainWindow::clean_table(){
