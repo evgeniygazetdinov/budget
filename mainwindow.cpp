@@ -94,9 +94,6 @@ int MainWindow::find_quantity_good_from_session()
     return numLines;
 }
 
-
-
-
 void MainWindow::fooling_table()
 {
     int row_count = find_quantity_good_from_session();
@@ -106,34 +103,35 @@ void MainWindow::fooling_table()
     /*add stuff inside the table view*/
     QString line = "hello";
 
-    for( int row = 0; row < 5; row++ )
+    QFile inputFile(SESSION_PATH);
+    if (inputFile.open(QIODevice::ReadOnly))
     {
-        for( int column = 0; column < 6; column++ )
+       QTextStream in(&inputFile);
+       while (!in.atEnd())
+       {
+            for( int row = 0; row < row_count; row++ )
+            {udisksctl unmount -b /dev/sda1
+                        udisksctl power-off -b /dev/sda
+                for( int column = 0; column < 2; column++ )
+                {
+                      QString line = in.readLine();
+                      QStringList list = line.split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
+                      for ( const auto& i : list  )
+                      {
+                          QVariant oVariant = i;
 
-        {
+                          QTableWidgetItem * poItem = new QTableWidgetItem();
+                          poItem->setData( Qt::DisplayRole, oVariant );
 
-            QFile inputFile(SESSION_PATH);
-            if (inputFile.open(QIODevice::ReadOnly))
-            {
-               QTextStream in(&inputFile);
-               while (!in.atEnd())
-               {
-                  QString line = in.readLine();
-                  QVariant oVariant = line;
-                  QTableWidgetItem * poItem = new QTableWidgetItem();
-                  poItem->setData( Qt::DisplayRole, oVariant );
-                  ui->tableWidget->setItem( row, column, poItem );
+                          ui->tableWidget->setItem( row, column, poItem );
+                      }
 
-               }
-               inputFile.close();
+
+                }
             }
-
-
-
-
-        }
+       }
+       inputFile.close();
     }
-
 }
 
 void MainWindow::clean_table(){
