@@ -94,9 +94,6 @@ int MainWindow::find_quantity_good_from_session()
     return numLines;
 }
 
-
-
-
 void MainWindow::fooling_table()
 {
     int row_count = find_quantity_good_from_session();
