@@ -110,8 +110,7 @@ void MainWindow::fooling_table()
        while (!in.atEnd())
        {
             for( int row = 0; row < row_count; row++ )
-            {udisksctl unmount -b /dev/sda1
-                        udisksctl power-off -b /dev/sda
+            {
                 for( int column = 0; column < 2; column++ )
                 {
                       QString line = in.readLine();
