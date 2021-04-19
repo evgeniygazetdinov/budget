@@ -24,12 +24,15 @@ public:
     void fooling_table();
 
     int find_quantity_good_from_session();
+    void remove_values_from_file_by_row(int row_number);
 
 
 private slots:
     void on_pushButton_clicked();
     void clean_table();
     void on_lineEdit_editingFinished();
+
+    void on_pushButton_2_clicked();
 
 private:
     Ui::MainWindow *ui;

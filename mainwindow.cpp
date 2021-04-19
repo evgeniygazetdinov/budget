@@ -13,7 +13,7 @@
 
 
 const QString SESSION_PATH = "/home/evgesha/budget/out.txt";
-
+const int COLUMN_COUNT = 2;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -99,7 +99,7 @@ void MainWindow::fooling_table()
     int row_count = find_quantity_good_from_session();
     ui->tableWidget->setRowCount(row_count);
     qDebug()<<row_count;
-    ui->tableWidget->setColumnCount(2);
+    ui->tableWidget->setColumnCount(COLUMN_COUNT);
     /*add stuff inside the table view*/
     QString line = "hello";
 
@@ -110,9 +110,8 @@ void MainWindow::fooling_table()
        while (!in.atEnd())
        {
             for( int row = 0; row < row_count; row++ )
-            {udisksctl unmount -b /dev/sda1
-                        udisksctl power-off -b /dev/sda
-                for( int column = 0; column < 2; column++ )
+            {
+                for( int column = 0; column < COLUMN_COUNT; column++ )
                 {
                       QString line = in.readLine();
                       QStringList list = line.split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
@@ -131,6 +130,24 @@ void MainWindow::fooling_table()
             }
        }
        inputFile.close();
+    }
+}
+
+void MainWindow::remove_values_from_file_by_row(int row_number){
+    QFile file(SESSION_PATH);
+    int line_count=0;
+    file.open(QIODevice::ReadOnly); //| QIODevice::Text)
+    QString line[100];
+    QTextStream in(&file);
+    while( !in.atEnd())
+    {
+        line[line_count]=in.readLine();
+        line_count++;
+        if(line_count == row_number){
+              qDebug()<<line_count;
+        }
+
+
     }
 }
 
@@ -163,4 +180,12 @@ void MainWindow::on_lineEdit_editingFinished()
 {
 
 
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    int row = ui->tableWidget->currentRow();
+
+    ui->tableWidget->removeRow(row);
+    remove_values_from_file_by_row(row);
 }
