@@ -1,4 +1,4 @@
-out.txt
+*.txt
 .out*
 mainwindow.cpp.autosave
 qjson_export.h

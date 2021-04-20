@@ -25,6 +25,7 @@ public:
 
     int find_quantity_good_from_session();
     void remove_values_from_file_by_row(int row_number);
+    QString file_get_line(QString fullFileName,int linenr);
 
 
 private slots:
