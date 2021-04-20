@@ -56,7 +56,6 @@ QString MainWindow::read_session()
     }
 
     file.close();
-    qDebug()<<data;
     return data;
 }
 
@@ -67,10 +66,6 @@ void MainWindow::write_to_session()
         return;
     qDebug()<<"on write";
     QTextStream out(&file);
-    for(auto e : MainWindow::myWaresMap.keys())
-    {
-      out <<e<<" "<< MainWindow::myWaresMap.value(e)<<"\n";
-    }
 
     file.close();
     qDebug()<<"writen`";
@@ -135,20 +130,52 @@ void MainWindow::fooling_table()
 
 void MainWindow::remove_values_from_file_by_row(int row_number){
     QFile file(SESSION_PATH);
+    QFile file_temp("/home/evgesha/budget/temp.txt");
     int line_count=0;
     file.open(QIODevice::ReadOnly); //| QIODevice::Text)
+    file_temp.open(QIODevice::WriteOnly);
     QString line[100];
     QTextStream in(&file);
+    QTextStream out(&file_temp);
+    qDebug()<<row_number;
     while( !in.atEnd())
     {
         line[line_count]=in.readLine();
-        line_count++;
-        if(line_count == row_number){
-              qDebug()<<line_count;
+        if(line_count != row_number or line[line_count] != " "){
+                out <<line[line_count]<<"\n";
+                qDebug()<<line[line_count];
         }
+
+        line_count++;
 
 
     }
+}
+QString MainWindow::file_get_line(QString fullFileName,int linenr)
+{
+    QString inside ="";
+    QFile file(fullFileName);
+    int countnr = 0;
+    if (linenr > 0) {
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+    return inside;
+    }
+
+    QTextStream in(&file);
+
+        while (!in.atEnd()) {   ////// eben nicht am ende
+         ++countnr;
+            if (countnr == linenr) {
+                inside = in.readLine(0);
+                if (inside.size() > 0) {
+                return inside;
+                }
+             break;
+            }
+        }
+    file.close();
+    }
+return inside;
 }
 
 void MainWindow::clean_table(){
