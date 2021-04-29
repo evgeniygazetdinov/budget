@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <QtSql>
 
 
 
@@ -21,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     MainWindow::fooling_table();
+    readJson();
  }
 
 MainWindow::~MainWindow()
@@ -93,11 +95,7 @@ void MainWindow::fooling_table()
 {
     int row_count = find_quantity_good_from_session();
     ui->tableWidget->setRowCount(row_count);
-    qDebug()<<row_count;
     ui->tableWidget->setColumnCount(COLUMN_COUNT);
-    /*add stuff inside the table view*/
-    QString line = "hello";
-
     QFile inputFile(SESSION_PATH);
     if (inputFile.open(QIODevice::ReadOnly))
     {
@@ -106,18 +104,22 @@ void MainWindow::fooling_table()
        {
             for( int row = 0; row < row_count; row++ )
             {
-                for( int column = 0; column < COLUMN_COUNT; column++ )
+                for( int column = 0; column < COLUMN_COUNT+1; column++ )
                 {
                       QString line = in.readLine();
+
                       QStringList list = line.split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
+
                       for ( const auto& i : list  )
                       {
-                          QVariant oVariant = i;
+                            qDebug()<<i<<"\n";
+                          QVariant oVariant(i);
 
                           QTableWidgetItem * poItem = new QTableWidgetItem();
                           poItem->setData( Qt::DisplayRole, oVariant );
 
                           ui->tableWidget->setItem( row, column, poItem );
+
                       }
 
 
@@ -137,13 +139,11 @@ void MainWindow::remove_values_from_file_by_row(int row_number){
     QString line[100];
     QTextStream in(&file);
     QTextStream out(&file_temp);
-    qDebug()<<row_number;
     while( !in.atEnd())
     {
         line[line_count]=in.readLine();
         if(line_count != row_number or line[line_count] != " "){
                 out <<line[line_count]<<"\n";
-                qDebug()<<line[line_count];
         }
 
         line_count++;
@@ -151,6 +151,35 @@ void MainWindow::remove_values_from_file_by_row(int row_number){
 
     }
 }
+
+
+void MainWindow::readJson()
+{
+   QString val;
+   QFile file;
+   file.setFileName("/home/evgesha/budget/test.json");
+   file.open(QIODevice::ReadOnly | QIODevice::Text);
+   val = file.readAll();
+   file.close();
+   qWarning() << val;
+   QJsonDocument d = QJsonDocument::fromJson(val.toUtf8());
+   QJsonObject sett2 = d.object();
+   QJsonValue value = sett2.value(QString("appName"));
+   qWarning() << value;
+   QJsonObject item = value.toObject();
+   qWarning() << tr("QJsonObject of description: ") << item;
+
+   /* in case of string value get value and convert into string*/
+   qWarning() << tr("QJsonObject[appName] of description: ") << item["description"];
+   QJsonValue subobj = item["description"];
+   qWarning() << subobj.toString();
+
+   /* in case of array get array and convert into string*/
+   qWarning() << tr("QJsonObject[appName] of value: ") << item["imp"];
+   QJsonArray test = item["imp"].toArray();
+   qWarning() << test[1].toString();
+}
+
 QString MainWindow::file_get_line(QString fullFileName,int linenr)
 {
     QString inside ="";
@@ -199,6 +228,7 @@ void MainWindow::on_pushButton_clicked()
     set_my_wares(target, price);
     store_to_session();
     clean_table();
+
     fooling_table();
 }
 
